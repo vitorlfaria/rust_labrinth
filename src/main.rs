@@ -1,10 +1,10 @@
 use crossterm::{
     cursor::{Hide, Show},
-    event::{self, Event, KeyCode},
-    terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
+    event::{self, Event, KeyCode, KeyEventKind},
+    terminal::{self, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use labrinth::{frame::{new_frame, Frame, self}, render::render};
+use labrinth::{frame::{new_frame, Frame, self, Drawable}, render::render, player::Player, levels::{self, level_1}};
 use std::{
     error::Error,
     io,
@@ -40,6 +40,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Game loop
     let mut instant = Instant::now();
+    let mut player = Player::new();
+    let mut levels = instantiate_levels();
 
     'gameloop: loop {
         // Per frame init
@@ -50,16 +52,32 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Input
         while event::poll(Duration::default()).unwrap() {
             if let Event::Key(key) = event::read().unwrap() {
-                match key.code {
-                    KeyCode::Esc => {
-                        break 'gameloop;
+                if key.kind == KeyEventKind::Press {
+                    match key.code {
+                        KeyCode::Left => player.move_left(),
+                        KeyCode::Right => player.move_right(),
+                        KeyCode::Up => player.move_up(),
+                        KeyCode::Down => player.move_down(),
+                        KeyCode::Esc => {
+                            break 'gameloop;
+                        }
+                        _ => {}
                     }
-                    _ => {}
                 }
             }
         }
 
+        // Update
+        player.update();
+
         // Draw and render
+        let mut drawables: Vec<&dyn Drawable> = vec![&player];
+        for level in &levels {
+            drawables.push(level);
+        }
+        for drawable in drawables {
+            drawable.draw(&mut curr_frame);
+        }
         let _ = render_tx.send(curr_frame);
         thread::sleep(Duration::from_millis(1));
     }
@@ -71,4 +89,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     stdout.execute(LeaveAlternateScreen)?;
     terminal::disable_raw_mode()?;
     Ok(())
+}
+
+pub fn instantiate_levels() -> Vec<level_1::Level> {
+    let mut levels = Vec::new();
+    levels.push(level_1::Level::new());
+    levels
 }
