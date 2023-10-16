@@ -88,13 +88,15 @@ impl Player {
 impl Drawable for Player {
     fn draw(&self, frame: &mut Frame) {
         frame[self.x][self.y] = "▓".to_string();
-        for (x, y, positive) in &self.hitbox {
-            if *positive {
-                frame[self.x + *x][self.y + *y] = "0".to_string();
-            }
-            else {
-                frame[self.x - *x][self.y - *y] = "0".to_string();
-            }
-        }
+
+        // Draw hitbox
+        // for (x, y, positive) in &self.hitbox {
+        //     if *positive {
+        //         frame[self.x + *x][self.y + *y] = "0".to_string();
+        //     }
+        //     else {
+        //         frame[self.x - *x][self.y - *y] = "0".to_string();
+        //     }
+        // }
     }
 }
