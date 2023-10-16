@@ -2,11 +2,11 @@ use crate::{frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS};
 
 use super::{level_tile::{LevelTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER}, level::LevelFactory};
 
-pub struct Level1 {
+pub struct Level {
     pub tiles: Vec<LevelTile>,
 }
 
-impl Level1 {
+impl Level {
     pub fn new() -> Self {
         Self {
             tiles: Vec::new(),
@@ -14,7 +14,7 @@ impl Level1 {
     }
 }
 
-impl LevelFactory for Level1 {
+impl LevelFactory for Level {
     fn create_level(&mut self) {
         let mut tiles = Vec::new();
 
@@ -38,7 +38,7 @@ impl LevelFactory for Level1 {
     }
 }
 
-impl Drawable for Level1 {
+impl Drawable for Level {
     fn draw(&self, frame: &mut Frame) {
         for tile in &self.tiles {
             frame[tile.x][tile.y] = tile.graphic.to_string();
