@@ -1,7 +1,7 @@
 use crate::{
-    NUM_COLS,
-    NUM_ROWS,
-    frame::{Drawable, Frame}, levels::{level_factory::LevelFactory, wall_tile::WallTile}
+    frame::{Drawable, Frame},
+    levels::{wall_tile::WallTile, door_tile::DoorTile},
+    NUM_COLS, NUM_ROWS,
 };
 
 pub struct Player {
@@ -21,28 +21,32 @@ impl Player {
         }
     }
 
-    pub fn move_up(&mut self, level: &Vec<WallTile>) {
+    pub fn move_up(&mut self, level: &Vec<WallTile>, doors: &Vec<DoorTile>) {
+        self.detect_doors(doors);
         let can_move = self.detect_walls(level);
         if self.y > 1 && can_move.1 {
             self.y -= 1;
         }
     }
 
-    pub fn move_down(&mut self, level: &Vec<WallTile>) {
+    pub fn move_down(&mut self, level: &Vec<WallTile>, doors: &Vec<DoorTile>) {
+        self.detect_doors(doors);
         let can_move = self.detect_walls(level);
         if self.y < NUM_ROWS - 2 && can_move.3 {
             self.y += 1;
         }
     }
 
-    pub fn move_left(&mut self, level: &Vec<WallTile>) {
+    pub fn move_left(&mut self, level: &Vec<WallTile>, doors: &Vec<DoorTile>) {
+        self.detect_doors(doors);
         let can_move = self.detect_walls(level);
         if self.x > 1 && can_move.0 {
             self.x -= 1;
         }
     }
 
-    pub fn move_right(&mut self, level: &Vec<WallTile>) {
+    pub fn move_right(&mut self, level: &Vec<WallTile>, doors: &Vec<DoorTile>) {
+        self.detect_doors(doors);
         let can_move = self.detect_walls(level);
         if self.x < NUM_COLS - 2 && can_move.2 {
             self.x += 1;
@@ -59,20 +63,17 @@ impl Player {
                         if self.x + *x == wall.x && self.y + *y == wall.y {
                             can_move.2 = false;
                         }
-                    }
-                    else if *x == 0 && *y == 1 {
+                    } else if *x == 0 && *y == 1 {
                         if self.x + *x == wall.x && self.y + *y == wall.y {
                             can_move.3 = false;
                         }
                     }
-                }
-                else {
+                } else {
                     if *x == 1 && *y == 0 {
                         if self.x - *x == wall.x && self.y - *y == wall.y {
                             can_move.0 = false;
                         }
-                    }
-                    else if *x == 0 && *y == 1 {
+                    } else if *x == 0 && *y == 1 {
                         if self.x - *x == wall.x && self.y - *y == wall.y {
                             can_move.1 = false;
                         }
@@ -82,6 +83,73 @@ impl Player {
         }
 
         can_move
+    }
+
+    
+    pub fn detect_doors(&mut self, doors: &Vec<DoorTile>) {
+        for (x, y, positive) in &self.hitbox {
+            for door in doors.iter() {
+                if *positive {
+                    if *x == 1 && *y == 0 {
+                        if self.x + *x == door.x && self.y + *y == door.y {
+                            self.current_level = door.to_level;
+                            if door.is_to_side {
+                                if door.x <= NUM_COLS / 2 {
+                                    self.x = NUM_COLS - 2;
+                                } else {
+                                    self.x = 1;
+                                }
+                            }
+                        }
+                    } else if *x == 0 && *y == 1 {
+                        if self.x + *x == door.x && self.y + *y == door.y {
+                            self.current_level = door.to_level;
+                            if door.is_to_side {
+                                if door.x <= NUM_COLS / 2 {
+                                    self.x = NUM_COLS - 2;
+                                } else {
+                                    self.x = 1;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if *x == 1 && *y == 0 {
+                        if self.x - *x == door.x && self.y - *y == door.y {
+                            self.current_level = door.to_level;
+                            if door.is_to_side {
+                                if door.x <= NUM_COLS / 2 {
+                                    self.x = NUM_COLS - 2;
+                                } else {
+                                    self.x = 1;
+                                }
+                            }
+                        }
+                    } else if *x == 0 && *y == 1 {
+                        if self.x - *x == door.x && self.y - *y == door.y {
+                            self.current_level = door.to_level;
+                            if door.is_to_side {
+                                if door.x <= NUM_COLS / 2 {
+                                    self.x = NUM_COLS - 2;
+                                } else {
+                                    self.x = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    pub fn move_player_to_door(&mut self, door: &DoorTile) {
+        if door.is_to_side {
+            if door.x <= NUM_COLS / 2 {
+                self.x = NUM_COLS - 2;
+            } else {
+                self.x = 1;
+            }
+        }
     }
 }
 

@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 pub struct WallTile {
     pub x: usize,
     pub y: usize,
