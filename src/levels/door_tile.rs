@@ -3,4 +3,5 @@ pub struct DoorTile {
     pub y: usize,
     pub to_level: usize,
     pub is_to_side: bool,
+    pub required_key: Option<String>,
 }

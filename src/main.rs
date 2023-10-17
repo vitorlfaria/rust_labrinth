@@ -6,7 +6,7 @@ use crossterm::{
 };
 use labrinth::{
     frame::{self, new_frame, Drawable, Frame},
-    levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile},
+    levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
     player::Player,
     render::render,
 };
@@ -52,20 +52,25 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Instatiate levels_tiles
     let mut level1 = Level1::new();
     let mut level2 = Level2::new();
+    let mut level3 = Level3::new();
 
     level1.create_level();
     level2.create_level();
+    level3.create_level();
 
     levels.push(&level1);
     levels.push(&level2);
+    levels.push(&level3);
 
     // Take levels tiles
     levels_tiles.push(&level1.tiles);
     levels_tiles.push(&level2.tiles);
+    levels_tiles.push(&level3.tiles);
 
     // Take levels doors
     levels_doors.push(&level1.doors);
     levels_doors.push(&level2.doors);
+    levels_doors.push(&level3.doors);
 
     // Game loop
     'gameloop: loop {

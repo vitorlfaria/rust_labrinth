@@ -1,8 +1,8 @@
 use crossterm::style::Stylize;
 
-use crate::{frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS};
+use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS};
 
-use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER, T_UP, T_RIGHT, T_LEFT, T_DOWN}, level_factory::LevelFactory, door_tile::{DoorTile}};
+use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER, T_UP, T_RIGHT, T_LEFT, T_DOWN}, level_factory::LevelFactory, door_tile::DoorTile};
 
 pub struct Level1 {
     pub tiles: Vec<WallTile>,
@@ -109,9 +109,16 @@ impl LevelFactory for Level1 {
         tiles.push(WallTile { x: NUM_COLS - 1, y: 16, graphic: T_RIGHT });
 
         // DOORS ======================================================
-        doors.push(DoorTile { x: 0, y: 13, to_level: 2, is_to_side: true });
-        doors.push(DoorTile { x: 0, y: 14, to_level: 2, is_to_side: true });
-        doors.push(DoorTile { x: 0, y: 15, to_level: 2, is_to_side: true });
+        // To level 2
+        doors.push(DoorTile { x: 0, y: 13, to_level: 2, is_to_side: true, required_key: None });
+        doors.push(DoorTile { x: 0, y: 14, to_level: 2, is_to_side: true, required_key: None });
+        doors.push(DoorTile { x: 0, y: 15, to_level: 2, is_to_side: true, required_key: None });
+
+        // To level 3
+        doors.push(DoorTile { x: 1, y: 0, to_level: 3, is_to_side: false, required_key: Some("3".to_string()) });
+        doors.push(DoorTile { x: 2, y: 0, to_level: 3, is_to_side: false, required_key: Some("3".to_string()) });
+        doors.push(DoorTile { x: 3, y: 0, to_level: 3, is_to_side: false, required_key: Some("3".to_string()) });
+        doors.push(DoorTile { x: 4, y: 0, to_level: 3, is_to_side: false, required_key: Some("3".to_string()) });
 
         self.tiles = tiles;
         self.doors = doors;

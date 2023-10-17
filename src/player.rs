@@ -1,7 +1,6 @@
 use crate::{
-    frame::{Drawable, Frame},
     levels::{wall_tile::WallTile, door_tile::DoorTile},
-    NUM_COLS, NUM_ROWS,
+    NUM_COLS, NUM_ROWS, utils::frame::{Drawable, Frame},
 };
 
 pub struct Player {
@@ -9,6 +8,7 @@ pub struct Player {
     y: usize,
     hitbox: Vec<(usize, usize, bool)>,
     pub current_level: usize,
+    pub keys: Vec<String>,
 }
 
 impl Player {
@@ -18,6 +18,7 @@ impl Player {
             y: NUM_ROWS - 5,
             hitbox: vec![(1, 0, true), (1, 0, false), (0, 1, true), (0, 1, false)],
             current_level: 1,
+            keys: Vec::new(),
         }
     }
 
@@ -51,6 +52,10 @@ impl Player {
         if self.x < NUM_COLS - 2 && can_move.2 {
             self.x += 1;
         }
+    }
+
+    pub fn take_key(&mut self, key: String) {
+        self.keys.push(key);
     }
 
     pub fn detect_walls(&mut self, level: &Vec<WallTile>) -> (bool, bool, bool, bool) {
@@ -100,6 +105,13 @@ impl Player {
                                     self.x = 1;
                                 }
                             }
+                            else {
+                                if door.y <= NUM_ROWS / 2 {
+                                    self.y = NUM_ROWS - 2;
+                                } else {
+                                    self.y = 1;
+                                }
+                            }
                         }
                     } else if *x == 0 && *y == 1 {
                         if self.x + *x == door.x && self.y + *y == door.y {
@@ -109,6 +121,13 @@ impl Player {
                                     self.x = NUM_COLS - 2;
                                 } else {
                                     self.x = 1;
+                                }
+                            }
+                            else {
+                                if door.y <= NUM_ROWS / 2 {
+                                    self.y = NUM_ROWS - 2;
+                                } else {
+                                    self.y = 1;
                                 }
                             }
                         }
@@ -124,6 +143,13 @@ impl Player {
                                     self.x = 1;
                                 }
                             }
+                            else {
+                                if door.y <= NUM_ROWS / 2 {
+                                    self.y = NUM_ROWS - 2;
+                                } else {
+                                    self.y = 1;
+                                }
+                            }
                         }
                     } else if *x == 0 && *y == 1 {
                         if self.x - *x == door.x && self.y - *y == door.y {
@@ -135,19 +161,16 @@ impl Player {
                                     self.x = 1;
                                 }
                             }
+                            else {
+                                if door.y <= NUM_ROWS / 2 {
+                                    self.y = NUM_ROWS - 2;
+                                } else {
+                                    self.y = 1;
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    }
-
-    pub fn move_player_to_door(&mut self, door: &DoorTile) {
-        if door.is_to_side {
-            if door.x <= NUM_COLS / 2 {
-                self.x = NUM_COLS - 2;
-            } else {
-                self.x = 1;
             }
         }
     }

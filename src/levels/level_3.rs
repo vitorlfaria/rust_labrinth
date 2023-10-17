@@ -13,12 +13,12 @@ use super::{
     door_tile::DoorTile,
 };
 
-pub struct Level2 {
+pub struct Level3 {
     pub tiles: Vec<WallTile>,
     pub doors: Vec<DoorTile>,
 }
 
-impl Level2 {
+impl Level3 {
     pub fn new() -> Self {
         Self {
             tiles: Vec::new(),
@@ -27,7 +27,7 @@ impl Level2 {
     }
 }
 
-impl LevelFactory for Level2 {
+impl LevelFactory for Level3 {
     fn create_level(&mut self) {
         let mut tiles = Vec::new();
         let mut doors = Vec::new();
@@ -47,16 +47,17 @@ impl LevelFactory for Level2 {
         tiles.push(WallTile { x: NUM_COLS - 1, y: NUM_ROWS - 1, graphic: BOTTOM_RIGHT_CORNER });
 
         // DOORS ======================================================
-        doors.push(DoorTile { x: NUM_COLS - 1, y: 13, to_level: 1, is_to_side: true, required_key: None });
-        doors.push(DoorTile { x: NUM_COLS - 1, y: 14, to_level: 1, is_to_side: true, required_key: None });
-        doors.push(DoorTile { x: NUM_COLS - 1, y: 15, to_level: 1, is_to_side: true, required_key: None });
+        doors.push(DoorTile { x: 1, y: NUM_ROWS - 1, to_level: 1, is_to_side: false, required_key: None });
+        doors.push(DoorTile { x: 2, y: NUM_ROWS - 1, to_level: 1, is_to_side: false, required_key: None });
+        doors.push(DoorTile { x: 3, y: NUM_ROWS - 1, to_level: 1, is_to_side: false, required_key: None });
+        doors.push(DoorTile { x: 4, y: NUM_ROWS - 1, to_level: 1, is_to_side: false, required_key: None });
 
         self.tiles = tiles;
         self.doors = doors;
     }
 }
 
-impl Drawable for Level2 {
+impl Drawable for Level3 {
     fn draw(&self, frame: &mut Frame) {
         for tile in &self.tiles {
             frame[tile.x][tile.y] = tile.graphic.to_string();
