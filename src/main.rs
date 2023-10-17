@@ -15,7 +15,7 @@ use std::{
     io,
     sync::mpsc,
     thread,
-    time::{Duration, Instant},
+    time::Duration,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -44,7 +44,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     // Instantiate game objects
-    let mut instant = Instant::now();
     let mut player = Player::new();
     let mut levels: Vec<&dyn Drawable> = Vec::new();
     let mut levels_tiles: Vec<&Vec<WallTile>> = Vec::new();
@@ -71,8 +70,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Game loop
     'gameloop: loop {
         // Per frame init
-        let delta = instant.elapsed();
-        instant = Instant::now();
         let mut curr_frame = new_frame();
         let curr_level = levels[player.current_level - 1];
         let curr_level_tiles = levels_tiles[player.current_level - 1];
