@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-pub struct LevelTile {
+pub struct WallTile {
     pub x: usize,
     pub y: usize,
     pub graphic: char,

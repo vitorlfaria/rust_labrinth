@@ -4,7 +4,7 @@ use crossterm::{
     terminal::{self, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use labrinth::{frame::{new_frame, Frame, self, Drawable}, render::render, player::Player, levels::{level_1::Level1, level::LevelFactory, level_tile::LevelTile}};
+use labrinth::{frame::{new_frame, Frame, self, Drawable}, render::render, player::Player, levels::{level_1::Level1, level::LevelFactory, wall_tile::WallTile}};
 use std::{
     error::Error,
     io,
@@ -41,7 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Instantiate game objects
     let mut instant = Instant::now();
     let mut player = Player::new();
-    let mut levels: Vec<&Vec<LevelTile>> = vec![];
+    let mut levels: Vec<&Vec<WallTile>> = vec![];
 
     // Instatiate levels
     let mut level1 = Level1::new();

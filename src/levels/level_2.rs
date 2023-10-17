@@ -1,9 +1,9 @@
 use crate::{frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS};
 
-use super::{level_tile::{LevelTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER}, level::LevelFactory};
+use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER}, level::LevelFactory};
 
 pub struct Level {
-    pub tiles: Vec<LevelTile>,
+    pub tiles: Vec<WallTile>,
 }
 
 impl Level {
@@ -20,19 +20,19 @@ impl LevelFactory for Level {
 
         // Walls
         for i in 1..NUM_ROWS - 1 {
-            tiles.push(LevelTile { x: 1, y: i, graphic: VERTICAL_WALL });
-            tiles.push(LevelTile { x: NUM_COLS - 2, y: i, graphic: VERTICAL_WALL });
+            tiles.push(WallTile { x: 1, y: i, graphic: VERTICAL_WALL });
+            tiles.push(WallTile { x: NUM_COLS - 2, y: i, graphic: VERTICAL_WALL });
         }
         for i in 1..NUM_COLS - 1 {
-            tiles.push(LevelTile { x: i, y: NUM_ROWS - 2, graphic: HORIZONTAL_WALL });
-            tiles.push(LevelTile { x: i, y: 1, graphic: HORIZONTAL_WALL });
+            tiles.push(WallTile { x: i, y: NUM_ROWS - 2, graphic: HORIZONTAL_WALL });
+            tiles.push(WallTile { x: i, y: 1, graphic: HORIZONTAL_WALL });
         }
 
         // Corners
-        tiles.push(LevelTile { x: 1, y: 1, graphic: TOP_LEFT_CORNER });
-        tiles.push(LevelTile { x: NUM_COLS - 2, y: 1, graphic: TOP_RIGHT_CORNER });
-        tiles.push(LevelTile { x: 1, y: NUM_ROWS - 2, graphic: BOTTOM_LEFT_CORNER });
-        tiles.push(LevelTile { x: NUM_COLS - 2, y: NUM_ROWS - 2, graphic: BOTTOM_RIGHT_CORNER });
+        tiles.push(WallTile { x: 1, y: 1, graphic: TOP_LEFT_CORNER });
+        tiles.push(WallTile { x: NUM_COLS - 2, y: 1, graphic: TOP_RIGHT_CORNER });
+        tiles.push(WallTile { x: 1, y: NUM_ROWS - 2, graphic: BOTTOM_LEFT_CORNER });
+        tiles.push(WallTile { x: NUM_COLS - 2, y: NUM_ROWS - 2, graphic: BOTTOM_RIGHT_CORNER });
 
         self.tiles = tiles;
     }

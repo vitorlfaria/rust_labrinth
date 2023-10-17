@@ -1,7 +1,7 @@
 use crate::{
     NUM_COLS,
     NUM_ROWS,
-    frame::{Drawable, Frame}, levels::{level::LevelFactory, level_tile::LevelTile}
+    frame::{Drawable, Frame}, levels::{level::LevelFactory, wall_tile::WallTile}
 };
 
 pub struct Player {
@@ -21,35 +21,35 @@ impl Player {
         }
     }
 
-    pub fn move_up(&mut self, level: &Vec<LevelTile>) {
+    pub fn move_up(&mut self, level: &Vec<WallTile>) {
         let can_move = self.detect_walls(level);
         if self.y > 1 && can_move.1 {
             self.y -= 1;
         }
     }
 
-    pub fn move_down(&mut self, level: &Vec<LevelTile>) {
+    pub fn move_down(&mut self, level: &Vec<WallTile>) {
         let can_move = self.detect_walls(level);
         if self.y < NUM_ROWS - 2 && can_move.3 {
             self.y += 1;
         }
     }
 
-    pub fn move_left(&mut self, level: &Vec<LevelTile>) {
+    pub fn move_left(&mut self, level: &Vec<WallTile>) {
         let can_move = self.detect_walls(level);
         if self.x > 1 && can_move.0 {
             self.x -= 1;
         }
     }
 
-    pub fn move_right(&mut self, level: &Vec<LevelTile>) {
+    pub fn move_right(&mut self, level: &Vec<WallTile>) {
         let can_move = self.detect_walls(level);
         if self.x < NUM_COLS - 2 && can_move.2 {
             self.x += 1;
         }
     }
 
-    pub fn detect_walls(&mut self, level: &Vec<LevelTile>) -> (bool, bool, bool, bool) {
+    pub fn detect_walls(&mut self, level: &Vec<WallTile>) -> (bool, bool, bool, bool) {
         let mut can_move = (true, true, true, true);
 
         for (x, y, positive) in &self.hitbox {
