@@ -63,10 +63,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             if let Event::Key(key) = event::read().unwrap() {
                 if key.kind == KeyEventKind::Press {
                     match key.code {
-                        KeyCode::Up => player.move_up(curr_level),
-                        KeyCode::Down => player.move_down(curr_level),
-                        KeyCode::Left => player.move_left(curr_level),
-                        KeyCode::Right => player.move_right(curr_level),
+                        KeyCode::Char('w') => player.move_up(curr_level),
+                        KeyCode::Char('s') => player.move_down(curr_level),
+                        KeyCode::Char('a') => player.move_left(curr_level),
+                        KeyCode::Char('d') => player.move_right(curr_level),
                         KeyCode::Esc => {
                             break 'gameloop;
                         }
