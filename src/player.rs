@@ -4,8 +4,8 @@ use crate::{
 };
 
 pub struct Player {
-    x: usize,
-    y: usize,
+    pub x: usize,
+    pub y: usize,
     hitbox: Vec<(usize, usize, bool)>,
     pub current_level: usize,
     pub keys: Vec<String>,
