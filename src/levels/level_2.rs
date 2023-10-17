@@ -18,21 +18,19 @@ impl LevelFactory for Level {
     fn create_level(&mut self) {
         let mut tiles = Vec::new();
 
-        // Walls
+        // Base walls
         for i in 1..NUM_ROWS - 1 {
-            tiles.push(WallTile { x: 1, y: i, graphic: VERTICAL_WALL });
-            tiles.push(WallTile { x: NUM_COLS - 2, y: i, graphic: VERTICAL_WALL });
+            tiles.push(WallTile { x: 0, y: i, graphic: VERTICAL_WALL });
+            tiles.push(WallTile { x: NUM_COLS - 1, y: i, graphic: VERTICAL_WALL });
         }
         for i in 1..NUM_COLS - 1 {
-            tiles.push(WallTile { x: i, y: NUM_ROWS - 2, graphic: HORIZONTAL_WALL });
-            tiles.push(WallTile { x: i, y: 1, graphic: HORIZONTAL_WALL });
+            tiles.push(WallTile { x: i, y: NUM_ROWS - 1, graphic: HORIZONTAL_WALL });
+            tiles.push(WallTile { x: i, y: 0, graphic: HORIZONTAL_WALL });
         }
-
-        // Corners
-        tiles.push(WallTile { x: 1, y: 1, graphic: TOP_LEFT_CORNER });
-        tiles.push(WallTile { x: NUM_COLS - 2, y: 1, graphic: TOP_RIGHT_CORNER });
-        tiles.push(WallTile { x: 1, y: NUM_ROWS - 2, graphic: BOTTOM_LEFT_CORNER });
-        tiles.push(WallTile { x: NUM_COLS - 2, y: NUM_ROWS - 2, graphic: BOTTOM_RIGHT_CORNER });
+        tiles.push(WallTile { x: 0, y: 0, graphic: TOP_LEFT_CORNER });
+        tiles.push(WallTile { x: NUM_COLS - 1, y: 0, graphic: TOP_RIGHT_CORNER });
+        tiles.push(WallTile { x: 0, y: NUM_ROWS - 1, graphic: BOTTOM_LEFT_CORNER });
+        tiles.push(WallTile { x: NUM_COLS - 1, y: NUM_ROWS - 1, graphic: BOTTOM_RIGHT_CORNER });
 
         self.tiles = tiles;
     }
