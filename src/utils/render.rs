@@ -1,4 +1,4 @@
-use crate::frame::Frame;
+use crate::utils::frame::Frame;
 use crossterm::{
     cursor::MoveTo,
     style::{Color, SetBackgroundColor},

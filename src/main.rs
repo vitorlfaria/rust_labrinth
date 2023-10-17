@@ -5,10 +5,10 @@ use crossterm::{
     ExecutableCommand,
 };
 use labrinth::{
-    frame::{self, new_frame, Drawable, Frame},
+    utils::frame::{self, new_frame, Drawable, Frame},
     levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
     player::Player,
-    render::render,
+    utils::render::render,
 };
 use std::{
     error::Error,
