@@ -1,6 +1,6 @@
 use crate::{frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS};
 
-use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER}, level::LevelFactory};
+use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER}, level_factory::LevelFactory};
 
 pub struct Level {
     pub tiles: Vec<WallTile>,

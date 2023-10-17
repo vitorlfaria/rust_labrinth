@@ -4,7 +4,7 @@ use crossterm::{
     terminal::{self, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use labrinth::{frame::{new_frame, Frame, self, Drawable}, render::render, player::Player, levels::{level_1::Level1, level::LevelFactory, wall_tile::WallTile}};
+use labrinth::{frame::{new_frame, Frame, self, Drawable}, render::render, player::Player, levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile}};
 use std::{
     error::Error,
     io,

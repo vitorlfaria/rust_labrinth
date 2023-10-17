@@ -1,7 +1,7 @@
 use crate::{
     NUM_COLS,
     NUM_ROWS,
-    frame::{Drawable, Frame}, levels::{level::LevelFactory, wall_tile::WallTile}
+    frame::{Drawable, Frame}, levels::{level_factory::LevelFactory, wall_tile::WallTile}
 };
 
 pub struct Player {
