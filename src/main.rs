@@ -8,7 +8,7 @@ use labrinth::{
     utils::frame::{self, new_frame, Drawable, Frame},
     levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
     player::Player,
-    utils::render::render,
+    utils::{render::render, pathfind_trait::Pathfind}, items::key::Key,
 };
 use std::{
     error::Error,
@@ -44,10 +44,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     // Instantiate game objects
+    let pathfinder = Pathfind::new();
     let mut player = Player::new();
     let mut levels: Vec<&dyn Drawable> = Vec::new();
     let mut levels_tiles: Vec<&Vec<WallTile>> = Vec::new();
     let mut levels_doors: Vec<&Vec<DoorTile>> = Vec::new();
+    let mut levels_keys: Vec<&Vec<Key>> = Vec::new();
 
     // Instatiate levels_tiles
     let mut level1 = Level1::new();
@@ -72,6 +74,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     levels_doors.push(&level2.doors);
     levels_doors.push(&level3.doors);
 
+    // Take levels keys
+    levels_keys.push(&level1.keys);
+    levels_keys.push(&level2.keys);
+    levels_keys.push(&level3.keys);
+
     // Game loop
     'gameloop: loop {
         // Per frame init
@@ -79,6 +86,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let curr_level = levels[player.current_level - 1];
         let curr_level_tiles = levels_tiles[player.current_level - 1];
         let curr_level_doors = levels_doors[player.current_level - 1];
+        let curr_level_keys = levels_keys[player.current_level - 1];
 
         // Input
         while event::poll(Duration::default()).unwrap() {
@@ -98,7 +106,16 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
 
+        // pathfind test
+        let path = pathfinder.find_path_to((player.x, player.y), (curr_level_keys[0].x, curr_level_keys[0].y), curr_level_tiles);
+        for node in path.iter() {
+            curr_frame[node.0][node.1] = 'X'.to_string();
+        }
+
         // Update
+        for key in curr_level_keys.iter() {
+            key.detect_player(&mut player);
+        }
 
         // Draw and render
         let drawables: Vec<&dyn Drawable> = vec![&player, curr_level];

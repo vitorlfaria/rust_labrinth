@@ -7,7 +7,7 @@ pub struct Key {
 }
 
 impl Key {
-    pub fn detect_player(&mut self, player: &mut Player) {
+    pub fn detect_player(&self, player: &mut Player) {
         if self.x == player.x && self.y == player.y {
             player.take_key(self.name.clone());
         }

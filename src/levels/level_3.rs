@@ -1,7 +1,7 @@
 use crossterm::style::Stylize;
 
 use crate::{
-    NUM_COLS, NUM_ROWS, utils::frame::{Drawable, Frame},
+    NUM_COLS, NUM_ROWS, utils::frame::{Drawable, Frame}, items::key::Key,
 };
 
 use super::{
@@ -16,6 +16,7 @@ use super::{
 pub struct Level3 {
     pub tiles: Vec<WallTile>,
     pub doors: Vec<DoorTile>,
+    pub keys: Vec<Key>,
 }
 
 impl Level3 {
@@ -23,6 +24,7 @@ impl Level3 {
         Self {
             tiles: Vec::new(),
             doors: Vec::new(),
+            keys: Vec::new(),
         }
     }
 }

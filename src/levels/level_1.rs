@@ -1,12 +1,13 @@
 use crossterm::style::Stylize;
 
-use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS};
+use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS, items::key::Key};
 
 use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER, T_UP, T_RIGHT, T_LEFT, T_DOWN}, level_factory::LevelFactory, door_tile::DoorTile};
 
 pub struct Level1 {
     pub tiles: Vec<WallTile>,
     pub doors: Vec<DoorTile>,
+    pub keys: Vec<Key>,
 }
 
 impl Level1 {
@@ -14,6 +15,7 @@ impl Level1 {
         Self {
             tiles: Vec::new(),
             doors: Vec::new(),
+            keys: Vec::new(),
         }
     }
 }
@@ -22,6 +24,7 @@ impl LevelFactory for Level1 {
     fn create_level(&mut self) {
         let mut tiles = Vec::new();
         let mut doors = Vec::new();
+        let mut keys = Vec::new();
 
         // Base walls
         for i in 1..NUM_ROWS - 1 {
@@ -120,8 +123,12 @@ impl LevelFactory for Level1 {
         doors.push(DoorTile { x: 3, y: 0, to_level: 3, is_to_side: false, required_key: Some("3".to_string()) });
         doors.push(DoorTile { x: 4, y: 0, to_level: 3, is_to_side: false, required_key: Some("3".to_string()) });
 
+        // KEYS ========================================================
+        keys.push(Key { x: 3, y: 5, name: "3".to_string() });
+
         self.tiles = tiles;
         self.doors = doors;
+        self.keys = keys;
     }
 }
 
@@ -132,6 +139,9 @@ impl Drawable for Level1 {
         }
         for door in &self.doors {
             frame[door.x][door.y] = "▓".yellow().to_string();
+        }
+        for key in &self.keys {
+            frame[key.x][key.y] = "φ".red().to_string();
         }
     }
 }

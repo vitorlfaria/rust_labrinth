@@ -55,7 +55,9 @@ impl Player {
     }
 
     pub fn take_key(&mut self, key: String) {
-        self.keys.push(key);
+        if !self.keys.contains(&key) {
+            self.keys.push(key);
+        }
     }
 
     pub fn detect_walls(&mut self, level: &Vec<WallTile>) -> (bool, bool, bool, bool) {
@@ -94,6 +96,12 @@ impl Player {
     pub fn detect_doors(&mut self, doors: &Vec<DoorTile>) {
         for (x, y, positive) in &self.hitbox {
             for door in doors.iter() {
+                if door.required_key != None {
+                    if !self.keys.contains(&door.required_key.as_ref().unwrap()) {
+                        continue;
+                    }
+                }
+
                 if *positive {
                     if *x == 1 && *y == 0 {
                         if self.x + *x == door.x && self.y + *y == door.y {
@@ -178,7 +186,7 @@ impl Player {
 
 impl Drawable for Player {
     fn draw(&self, frame: &mut Frame) {
-        frame[self.x][self.y] = "▓".to_string();
+        frame[self.x][self.y] = "█".to_string();
 
         // Draw hitbox
         // for (x, y, positive) in &self.hitbox {

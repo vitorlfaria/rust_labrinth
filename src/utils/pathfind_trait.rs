@@ -1,11 +1,17 @@
 use crate::levels::wall_tile::WallTile;
 
-pub trait Pathfind {
-    fn find_path_to(self_coords: (usize, usize), player_coords: (usize, usize), level_walls: Vec<&WallTile>) -> Vec<(usize, usize, usize)> {
+pub struct Pathfind;
+
+impl Pathfind {
+    pub fn new() -> Self {
+        Self
+    }
+
+    pub fn find_path_to(&self, initial_coords: (usize, usize), target_coords: (usize, usize), level_walls: &Vec<WallTile>) -> Vec<(usize, usize, usize)> {
         let mut best_path: Vec<(usize, usize, usize)> = Vec::new();
-        let mut main_nodes: Vec<(usize, usize, usize)> = vec![(player_coords.0, player_coords.1, 0)];
+        let mut main_nodes: Vec<(usize, usize, usize)> = vec![(target_coords.0, target_coords.1, 0)];
         let mut visited_nodes: Vec<(usize, usize, usize)> = Vec::new();
-        let mut nodes_to_check: Vec<(usize, usize, usize)> = vec![(player_coords.0, player_coords.1, 0)];
+        let mut nodes_to_check: Vec<(usize, usize, usize)> = vec![(target_coords.0, target_coords.1, 0)];
 
         // Search for the target node (self node)
         let mut counter = 1;
@@ -24,7 +30,7 @@ pub trait Pathfind {
                 ];
 
                 for search_node in search_nodes.iter() {
-                    if search_node.0 == self_coords.0 && search_node.1 == self_coords.1 {
+                    if search_node.0 == initial_coords.0 && search_node.1 == initial_coords.1 {
                         best_path.push((node.0, node.1, node.2));
                         break 'searchloop;
                     }
@@ -52,12 +58,22 @@ pub trait Pathfind {
 
         // Backtrack to find the best path
         main_nodes.reverse();
-        let current_node = best_path[0];
+        let mut current_node = best_path[0];
+        if current_node.2 == 0 {
+            return vec![(initial_coords.0, initial_coords.1, 0)];
+        }
         let mut search_counter = current_node.2 - 1;
-        
-        'backtrackloop: loop {
-            let nodes = main_nodes.iter().filter(|node| node.2 == search_counter).collect::<Vec<_>>();
-            let next_node = nodes[0];
+        while search_counter > 0 {
+            let search_nodes = vec![
+                (current_node.0 + 1, current_node.1, current_node.2 - 1),
+                (current_node.0 - 1, current_node.1, current_node.2 - 1),
+                (current_node.0, current_node.1 + 1, current_node.2 - 1),
+                (current_node.0, current_node.1 - 1, current_node.2 - 1),
+            ];
+            let nodes = main_nodes.iter().filter(|node| node.2 == search_counter && search_nodes.contains(node)).collect::<Vec<_>>();
+            best_path.push(nodes[0].clone());
+            current_node = nodes[0].clone();
+            search_counter = current_node.2 - 1;
         }
 
         best_path
