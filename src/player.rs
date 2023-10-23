@@ -60,6 +60,62 @@ impl Player {
         }
     }
 
+    pub fn view_range(&self) -> Vec<Vec<(usize, usize)>> {
+        let mut view_range = Vec::new();
+        let mut inner_range = Vec::new();
+        let mut outer_range = Vec::new();
+
+        let mut minusx = 0;
+        let mut plusx = 0;
+        let mut minusy = 0;
+        let mut plusy = 0;
+
+        if self.x < 10 {
+            minusx = 0;
+        }
+        else {
+            minusx = self.x - 10;
+        }
+
+        if self.x > NUM_COLS - 10 {
+            plusx = NUM_COLS;
+        }
+        else {
+            plusx = self.x + 10;
+        }
+
+        if self.y < 6 {
+            minusy = 0;
+        }
+        else {
+            minusy = self.y - 6;
+        }
+
+        if self.y > NUM_ROWS - 6 {
+            plusy = NUM_ROWS;
+        }
+        else {
+            plusy = self.y + 6;
+        }
+
+        for x in minusx + 2..=plusx - 2 {
+            for y in minusy + 2..=plusy - 2 {
+                inner_range.push((x, y));
+            }
+        }
+
+        for x in minusx..=plusx {
+            for y in minusy..=plusy {
+                outer_range.push((x, y));
+            }
+        }
+
+        view_range.push(inner_range);
+        view_range.push(outer_range);
+
+        view_range
+    }
+
     pub fn detect_walls(&mut self, level: &Vec<WallTile>) -> (bool, bool, bool, bool) {
         let mut can_move = (true, true, true, true);
 
@@ -185,7 +241,7 @@ impl Player {
 }
 
 impl Drawable for Player {
-    fn draw(&self, frame: &mut Frame) {
+    fn draw(&self, frame: &mut Frame, _render_area: &Vec<Vec<(usize, usize)>>) {
         frame[self.x][self.y] = "█".to_string();
 
         // Draw hitbox

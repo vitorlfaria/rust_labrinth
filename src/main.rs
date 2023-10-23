@@ -107,10 +107,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         // pathfind test
-        let path = pathfinder.find_path_to((player.x, player.y), (curr_level_keys[0].x, curr_level_keys[0].y), curr_level_tiles);
-        for node in path.iter() {
-            curr_frame[node.0][node.1] = 'X'.to_string();
-        }
+        // let path = pathfinder.find_path_to((player.x, player.y), (curr_level_keys[0].x, curr_level_keys[0].y), curr_level_tiles);
+        // for node in path.iter() {
+        //     curr_frame[node.0][node.1] = 'X'.to_string();
+        // }
 
         // Update
         for key in curr_level_keys.iter() {
@@ -118,9 +118,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         // Draw and render
+        let view_range = player.view_range();
         let drawables: Vec<&dyn Drawable> = vec![&player, curr_level];
         for drawable in drawables {
-            drawable.draw(&mut curr_frame);
+            drawable.draw(&mut curr_frame, &view_range);
         }
         let _ = render_tx.send(curr_frame);
         thread::sleep(Duration::from_millis(1));

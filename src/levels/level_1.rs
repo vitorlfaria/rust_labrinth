@@ -133,15 +133,30 @@ impl LevelFactory for Level1 {
 }
 
 impl Drawable for Level1 {
-    fn draw(&self, frame: &mut Frame) {
+    fn draw(&self, frame: &mut Frame, _render_area: &Vec<Vec<(usize, usize)>>) {
         for tile in &self.tiles {
-            frame[tile.x][tile.y] = tile.graphic.to_string();
+            if _render_area[1].contains(&(tile.x, tile.y)) {
+                frame[tile.x][tile.y] = tile.graphic.dark_grey().to_string();
+            }
+            if _render_area[0].contains(&(tile.x, tile.y)) {
+                frame[tile.x][tile.y] = tile.graphic.to_string();
+            }
         }
         for door in &self.doors {
-            frame[door.x][door.y] = "▓".yellow().to_string();
+            if _render_area[1].contains(&(door.x, door.y)) {
+                frame[door.x][door.y] = "▓".yellow().to_string();
+            }
+            if _render_area[0].contains(&(door.x, door.y)) {
+                frame[door.x][door.y] = "▓".yellow().to_string();
+            }
         }
         for key in &self.keys {
-            frame[key.x][key.y] = "φ".red().to_string();
+            if _render_area[1].contains(&(key.x, key.y)) {
+                frame[key.x][key.y] = "φ".red().to_string();
+            }
+            if _render_area[0].contains(&(key.x, key.y)) {
+                frame[key.x][key.y] = "φ".red().to_string();
+            }
         }
     }
 }

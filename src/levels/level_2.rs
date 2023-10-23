@@ -59,7 +59,7 @@ impl LevelFactory for Level2 {
 }
 
 impl Drawable for Level2 {
-    fn draw(&self, frame: &mut Frame) {
+    fn draw(&self, frame: &mut Frame, _render_area: &Vec<Vec<(usize, usize)>>) {
         for tile in &self.tiles {
             frame[tile.x][tile.y] = tile.graphic.to_string();
         }
