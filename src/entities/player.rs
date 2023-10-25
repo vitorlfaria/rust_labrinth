@@ -242,16 +242,16 @@ impl Player {
 
 impl Drawable for Player {
     fn draw(&self, frame: &mut Frame, _render_area: &Vec<Vec<(usize, usize)>>) {
-        frame[self.x][self.y] = "█".to_string();
+        frame[self.x][self.y] = "A".to_string();
 
         // Draw hitbox
-        // for (x, y, positive) in &self.hitbox {
-        //     if *positive {
-        //         frame[self.x + *x][self.y + *y] = "0".to_string();
-        //     }
-        //     else {
-        //         frame[self.x - *x][self.y - *y] = "0".to_string();
-        //     }
-        // }
+        for (x, y, positive) in &self.hitbox {
+            if *positive {
+                frame[self.x + *x][self.y + *y] = "0".to_string();
+            }
+            else {
+                frame[self.x - *x][self.y - *y] = "0".to_string();
+            }
+        }
     }
 }

@@ -7,8 +7,8 @@ use crossterm::{
 use labrinth::{
     utils::frame::{self, new_frame, Drawable, Frame},
     levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
-    player::Player,
-    utils::{render::render, pathfind_trait::Pathfind}, items::key::Key,
+    entities::player::Player,
+    utils::render::render, items::key::Key,
 };
 use std::{
     error::Error,
@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     // Instantiate game objects
-    let pathfinder = Pathfind::new();
+    //let pathfinder = Pathfind::new();
     let mut player = Player::new();
     let mut levels: Vec<&dyn Drawable> = Vec::new();
     let mut levels_tiles: Vec<&Vec<WallTile>> = Vec::new();

@@ -1,4 +1,4 @@
-use crate::player::Player;
+use crate::entities::player::Player;
 
 pub struct Key {
     pub x: usize,
