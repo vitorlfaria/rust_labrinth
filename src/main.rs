@@ -7,7 +7,7 @@ use crossterm::{
 use labrinth::{
     utils::frame::{self, new_frame, Drawable, Frame},
     levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
-    entities::player::Player,
+    entities::{player::Player, enemy::Enemy},
     utils::render::render, items::key::Key,
 };
 use std::{
@@ -15,7 +15,7 @@ use std::{
     io,
     sync::mpsc,
     thread,
-    time::Duration,
+    time::{Duration, Instant},
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -45,6 +45,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Instantiate game objects
     //let pathfinder = Pathfind::new();
+    let mut instant = Instant::now();
     let mut player = Player::new();
     let mut levels: Vec<&dyn Drawable> = Vec::new();
     let mut levels_tiles: Vec<&Vec<WallTile>> = Vec::new();
@@ -79,9 +80,16 @@ fn main() -> Result<(), Box<dyn Error>> {
     levels_keys.push(&level2.keys);
     levels_keys.push(&level3.keys);
 
+    let mut enemy = Enemy::new(0,0);
+    if player.current_level == 1 {
+        enemy = Enemy::new(level1.enemy.0, level1.enemy.1);
+    }
+
     // Game loop
     'gameloop: loop {
         // Per frame init
+        let delta = instant.elapsed();
+        instant = Instant::now();
         let mut curr_frame = new_frame();
         let curr_level = levels[player.current_level - 1];
         let curr_level_tiles = levels_tiles[player.current_level - 1];
@@ -113,12 +121,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         // }
 
         // Update
+        let view_range = player.view_range();
         for key in curr_level_keys.iter() {
             key.detect_player(&mut player);
         }
+        if player.current_level == 1 {
+            enemy.update(&mut player, delta);
+            enemy.draw(&mut curr_frame, &view_range);
+        }
 
         // Draw and render
-        let view_range = player.view_range();
         let drawables: Vec<&dyn Drawable> = vec![&player, curr_level];
         for drawable in drawables {
             drawable.draw(&mut curr_frame, &view_range);

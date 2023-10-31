@@ -1,6 +1,6 @@
 use crossterm::style::Stylize;
 
-use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS, items::key::Key};
+use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS, items::key::Key, entities::{enemy::Enemy, player::Player}};
 
 use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER, T_UP, T_RIGHT, T_LEFT, T_DOWN}, level_factory::LevelFactory, door_tile::DoorTile};
 
@@ -8,6 +8,7 @@ pub struct Level1 {
     pub tiles: Vec<WallTile>,
     pub doors: Vec<DoorTile>,
     pub keys: Vec<Key>,
+    pub enemy: (usize, usize),
 }
 
 impl Level1 {
@@ -16,6 +17,7 @@ impl Level1 {
             tiles: Vec::new(),
             doors: Vec::new(),
             keys: Vec::new(),
+            enemy: (10, 15),
         }
     }
 }

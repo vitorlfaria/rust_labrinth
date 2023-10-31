@@ -245,13 +245,13 @@ impl Drawable for Player {
         frame[self.x][self.y] = "A".to_string();
 
         // Draw hitbox
-        for (x, y, positive) in &self.hitbox {
-            if *positive {
-                frame[self.x + *x][self.y + *y] = "0".to_string();
-            }
-            else {
-                frame[self.x - *x][self.y - *y] = "0".to_string();
-            }
-        }
+        // for (x, y, positive) in &self.hitbox {
+        //     if *positive {
+        //         frame[self.x + *x][self.y + *y] = "0".to_string();
+        //     }
+        //     else {
+        //         frame[self.x - *x][self.y - *y] = "0".to_string();
+        //     }
+        // }
     }
 }
