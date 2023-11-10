@@ -11,6 +11,7 @@ pub struct Player {
     pub keys: Vec<String>,
 }
 
+#[allow(unused_assignments)]
 impl Player {
     pub fn new() -> Self {
         Self {

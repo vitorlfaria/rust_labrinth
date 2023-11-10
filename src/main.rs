@@ -44,7 +44,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     // Instantiate game objects
-    //let pathfinder = Pathfind::new();
     let mut instant = Instant::now();
     let mut player = Player::new();
     let mut levels: Vec<&dyn Drawable> = Vec::new();
@@ -114,19 +113,13 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
 
-        // pathfind test
-        // let path = pathfinder.find_path_to((player.x, player.y), (curr_level_keys[0].x, curr_level_keys[0].y), curr_level_tiles);
-        // for node in path.iter() {
-        //     curr_frame[node.0][node.1] = 'X'.to_string();
-        // }
-
         // Update
         let view_range = player.view_range();
         for key in curr_level_keys.iter() {
             key.detect_player(&mut player);
         }
         if player.current_level == 1 {
-            enemy.update(&mut player, delta);
+            enemy.update(&mut player, delta, &curr_level_tiles);
             enemy.draw(&mut curr_frame, &view_range);
         }
 
