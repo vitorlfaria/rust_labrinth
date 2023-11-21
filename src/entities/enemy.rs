@@ -11,14 +11,16 @@ pub struct Enemy {
     chase_timer: Timer,
     patrol_timer: Timer,
     current_state: &'static str,
-    route: Vec<(usize, usize)>,
+    patrol_points: Vec<(usize, usize)>,
+    current_point: usize,
+    route: Vec<(usize, usize, usize)>,
     graphic: char,
     hitbox: Vec<(usize, usize, bool)>,
     pathfinder: Pathfind,
 }
 
 impl Enemy {
-    pub fn new(x: usize, y: usize) -> Self {
+    pub fn new(x: usize, y: usize, patrol_points: Vec<(usize, usize)>) -> Self {
         Self {
             x,
             y,
@@ -26,30 +28,75 @@ impl Enemy {
             chase_timer: Timer::from_millis(200),
             patrol_timer: Timer::from_millis(500),
             current_state: "idle",
-            route: vec![(0,0)],
-            graphic: 'E',
+            patrol_points,
+            route: vec![],
+            current_point: 0,
+            graphic: '§',
             hitbox: vec![(1, 0, true), (1, 0, false), (0, 1, true), (0, 1, false)],
             pathfinder: Pathfind::new(),
         }
     }
 
     pub fn update(&mut self, player: &Player, delta: Duration, level: &Vec<WallTile>) {
-        self.detect_player(player, delta, level);
+        let player_in_range: bool = self.detect_player_range(player);
+        
+        if player_in_range {
+            self.current_state = "chase";
+        }
+        else if self.current_state == "chase" {
+            self.current_state = "idle";
+        }
 
-        if self.current_state == "idle" {
-            if self.idle_timer.ready {
-                self.idle_timer.update(delta);
-                self.current_state = "patrol";
-                self.idle_timer.reset();
-            }
+        match self.current_state {
+            "idle" => {
+                self.idle_logic(delta);
+            },
+            "chase" => {
+                self.chase_logic(player, delta, level);
+            },
+            "patrol" => {
+                self.patrol_logic(delta, level);
+            },
+            _ => {}
         }
     }
 
-    pub fn detect_player(&mut self, player: &Player, delta: Duration, level: &Vec<WallTile>) {
+    pub fn detect_player_range(&mut self, player: &Player) -> bool {
         let range = player.view_range();
         if range[0].contains(&(self.x, self.y)) {
-            self.current_state = "chase";
-            self.chase_logic(player, delta, level);
+            return true;
+        }
+        false
+    }
+
+    fn patrol_logic(&mut self, delta: Duration, level: &Vec<WallTile>) {
+        self.current_point += 1;
+        if self.current_point > self.patrol_points.len() - 1 {
+            self.current_point = 0;
+        }
+
+        let next_point = self.patrol_points[self.current_point];
+        if self.route.len() == 0 {
+            let mut route = self.pathfinder.find_path_to((self.x, self.y), next_point, level);
+            route.reverse();
+            self.route = route;
+        }
+
+        self.patrol_timer.update(delta);
+        if self.patrol_timer.ready {
+            let walk_to = self.route.pop().unwrap(); 
+            self.x = walk_to.0;
+            self.y = walk_to.1;
+            self.patrol_timer.reset();
+        }
+    }
+
+    fn idle_logic(&mut self, delta: Duration) {
+        self.idle_timer.update(delta);
+        if self.idle_timer.ready {
+            self.current_state = "patrol";
+            self.route = vec![];
+            self.idle_timer.reset();
         }
     }
 

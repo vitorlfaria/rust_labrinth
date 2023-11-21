@@ -1,6 +1,6 @@
 use crossterm::style::Stylize;
 
-use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS, items::key::Key, entities::{enemy::Enemy, player::Player}};
+use crate::{utils::frame::{Drawable, Frame}, NUM_COLS, NUM_ROWS, items::key::Key};
 
 use super::{wall_tile::{WallTile, VERTICAL_WALL, BOTTOM_LEFT_CORNER, HORIZONTAL_WALL, TOP_LEFT_CORNER, TOP_RIGHT_CORNER, BOTTOM_RIGHT_CORNER, T_UP, T_RIGHT, T_LEFT, T_DOWN}, level_factory::LevelFactory, door_tile::DoorTile};
 
@@ -9,16 +9,27 @@ pub struct Level1 {
     pub doors: Vec<DoorTile>,
     pub keys: Vec<Key>,
     pub enemy: (usize, usize),
+    pub patrol_points: Vec<(usize, usize)>,
 }
 
 impl Level1 {
     pub fn new() -> Self {
+        let routes = Self::generate_patrol_points();
         Self {
             tiles: Vec::new(),
             doors: Vec::new(),
             keys: Vec::new(),
             enemy: (10, 15),
+            patrol_points: routes,
         }
+    }
+
+    fn generate_patrol_points() -> Vec<(usize, usize)> {
+        let mut patrol_points = Vec::new();
+        
+        patrol_points.push((3, 2));
+
+        patrol_points
     }
 }
 
@@ -159,6 +170,9 @@ impl Drawable for Level1 {
             if _render_area[0].contains(&(key.x, key.y)) {
                 frame[key.x][key.y] = "φ".red().to_string();
             }
+        }
+        for (x, y) in &self.patrol_points {
+            frame[*x][*y] = "▓".red().to_string();
         }
     }
 }

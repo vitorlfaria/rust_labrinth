@@ -79,9 +79,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     levels_keys.push(&level2.keys);
     levels_keys.push(&level3.keys);
 
-    let mut enemy = Enemy::new(0,0);
+    let mut enemy = Enemy::new(0,0, vec![]);
     if player.current_level == 1 {
-        enemy = Enemy::new(level1.enemy.0, level1.enemy.1);
+        enemy = Enemy::new(level1.enemy.0, level1.enemy.1, level1.patrol_points.clone());
     }
 
     // Game loop

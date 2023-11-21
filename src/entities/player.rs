@@ -71,18 +71,18 @@ impl Player {
         let mut minusy = 0;
         let mut plusy = 0;
 
-        if self.x < 10 {
+        if self.x < 14 {
             minusx = 0;
         }
         else {
-            minusx = self.x - 10;
+            minusx = self.x - 14;
         }
 
-        if self.x > NUM_COLS - 10 {
+        if self.x > NUM_COLS - 14 {
             plusx = NUM_COLS;
         }
         else {
-            plusx = self.x + 10;
+            plusx = self.x + 14;
         }
 
         if self.y < 6 {
@@ -99,8 +99,8 @@ impl Player {
             plusy = self.y + 6;
         }
 
-        for x in minusx + 2..=plusx - 2 {
-            for y in minusy + 2..=plusy - 2 {
+        for x in minusx + 4..=plusx - 4 {
+            for y in minusy + 4..=plusy - 4 {
                 inner_range.push((x, y));
             }
         }
