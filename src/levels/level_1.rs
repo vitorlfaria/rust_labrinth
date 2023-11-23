@@ -28,6 +28,10 @@ impl Level1 {
         let mut patrol_points = Vec::new();
         
         patrol_points.push((3, 2));
+        patrol_points.push((2, 15));
+        patrol_points.push((55, 2));
+        patrol_points.push((70, 14));
+        patrol_points.push((40, 22));
 
         patrol_points
     }
@@ -171,8 +175,8 @@ impl Drawable for Level1 {
                 frame[key.x][key.y] = "φ".red().to_string();
             }
         }
-        for (x, y) in &self.patrol_points {
-            frame[*x][*y] = "▓".red().to_string();
-        }
+        // for (x, y) in &self.patrol_points {
+        //     frame[*x][*y] = "▓".red().to_string();
+        // }
     }
 }

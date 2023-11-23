@@ -1,6 +1,7 @@
 use crate::{
-    levels::{wall_tile::WallTile, door_tile::DoorTile},
-    NUM_COLS, NUM_ROWS, utils::frame::{Drawable, Frame},
+    levels::{door_tile::DoorTile, wall_tile::WallTile},
+    utils::frame::{Drawable, Frame},
+    NUM_COLS, NUM_ROWS,
 };
 
 pub struct Player {
@@ -71,36 +72,32 @@ impl Player {
         let mut minusy = 0;
         let mut plusy = 0;
 
-        if self.x < 14 {
+        if self.x < 12 {
             minusx = 0;
-        }
-        else {
-            minusx = self.x - 14;
+        } else {
+            minusx = self.x - 12;
         }
 
-        if self.x > NUM_COLS - 14 {
+        if self.x > NUM_COLS - 12 {
             plusx = NUM_COLS;
-        }
-        else {
-            plusx = self.x + 14;
+        } else {
+            plusx = self.x + 12;
         }
 
         if self.y < 6 {
             minusy = 0;
-        }
-        else {
+        } else {
             minusy = self.y - 6;
         }
 
         if self.y > NUM_ROWS - 6 {
             plusy = NUM_ROWS;
-        }
-        else {
+        } else {
             plusy = self.y + 6;
         }
 
-        for x in minusx + 4..=plusx - 4 {
-            for y in minusy + 4..=plusy - 4 {
+        for x in minusx + 2..=plusx - 2 {
+            for y in minusy + 2..=plusy - 2 {
                 inner_range.push((x, y));
             }
         }
@@ -149,7 +146,6 @@ impl Player {
         can_move
     }
 
-    
     pub fn detect_doors(&mut self, doors: &Vec<DoorTile>) {
         for (x, y, positive) in &self.hitbox {
             for door in doors.iter() {
@@ -169,8 +165,7 @@ impl Player {
                                 } else {
                                     self.x = 1;
                                 }
-                            }
-                            else {
+                            } else {
                                 if door.y <= NUM_ROWS / 2 {
                                     self.y = NUM_ROWS - 2;
                                 } else {
@@ -187,8 +182,7 @@ impl Player {
                                 } else {
                                     self.x = 1;
                                 }
-                            }
-                            else {
+                            } else {
                                 if door.y <= NUM_ROWS / 2 {
                                     self.y = NUM_ROWS - 2;
                                 } else {
@@ -207,8 +201,7 @@ impl Player {
                                 } else {
                                     self.x = 1;
                                 }
-                            }
-                            else {
+                            } else {
                                 if door.y <= NUM_ROWS / 2 {
                                     self.y = NUM_ROWS - 2;
                                 } else {
@@ -225,8 +218,7 @@ impl Player {
                                 } else {
                                     self.x = 1;
                                 }
-                            }
-                            else {
+                            } else {
                                 if door.y <= NUM_ROWS / 2 {
                                     self.y = NUM_ROWS - 2;
                                 } else {
