@@ -10,6 +10,7 @@ pub struct Player {
     hitbox: Vec<(usize, usize, bool)>,
     pub current_level: usize,
     pub keys: Vec<String>,
+    pub health: i32,
 }
 
 #[allow(unused_assignments)]
@@ -21,7 +22,12 @@ impl Player {
             hitbox: vec![(1, 0, true), (1, 0, false), (0, 1, true), (0, 1, false)],
             current_level: 1,
             keys: Vec::new(),
+            health: 100,
         }
+    }
+
+    pub fn take_hit(&mut self) {
+        self.health = self.health - 25;
     }
 
     pub fn move_up(&mut self, level: &Vec<WallTile>, doors: &Vec<DoorTile>) {
@@ -236,6 +242,7 @@ impl Player {
 impl Drawable for Player {
     fn draw(&self, frame: &mut Frame, _render_area: &Vec<Vec<(usize, usize)>>) {
         frame[self.x][self.y] = "A".to_string();
+        frame[0][0] = format!("Health: {}", self.health);
 
         // Draw hitbox
         // for (x, y, positive) in &self.hitbox {

@@ -10,12 +10,12 @@ pub struct Enemy {
     idle_timer: Timer,
     chase_timer: Timer,
     patrol_timer: Timer,
+    hit_timer: Timer,
     current_state: &'static str,
     patrol_points: Vec<(usize, usize)>,
     current_point: usize,
     route: Vec<(usize, usize, usize)>,
     graphic: char,
-    hitbox: Vec<(usize, usize, bool)>,
     pathfinder: Pathfind,
 }
 
@@ -27,17 +27,17 @@ impl Enemy {
             idle_timer: Timer::from_millis(2000),
             chase_timer: Timer::from_millis(200),
             patrol_timer: Timer::from_millis(500),
+            hit_timer: Timer::from_millis(100),
             current_state: "idle",
             patrol_points,
             route: vec![],
             current_point: 0,
             graphic: '§',
-            hitbox: vec![(1, 0, true), (1, 0, false), (0, 1, true), (0, 1, false)],
             pathfinder: Pathfind::new(),
         }
     }
 
-    pub fn update(&mut self, player: &Player, delta: Duration, level: &Vec<WallTile>) {
+    pub fn update(&mut self, player: &mut Player, delta: Duration, level: &Vec<WallTile>) {
         let player_in_range: bool = self.detect_player_range(player);
         
         if player_in_range {
@@ -100,7 +100,7 @@ impl Enemy {
         }
     }
 
-    fn chase_logic(&mut self, player: &Player, delta: Duration, level: &Vec<WallTile>) {
+    fn chase_logic(&mut self, player: &mut Player, delta: Duration, level: &Vec<WallTile>) {
         self.chase_timer.update(delta);
         
         if self.chase_timer.ready {
@@ -109,8 +109,21 @@ impl Enemy {
                 self.x = path[0].0;
                 self.y = path[0].1;
             }
+            
+            if path.len() <= 2 {
+                self.hit_player(player, delta);
+            }
 
             self.chase_timer.reset();
+        }
+    }
+    
+    fn hit_player(&mut self, player: &mut Player, delta: Duration) {
+        self.hit_timer.update(delta);
+
+        if self.hit_timer.ready {
+            player.take_hit();
+            self.hit_timer.reset();
         }
     }
 }
