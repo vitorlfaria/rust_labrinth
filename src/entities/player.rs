@@ -11,6 +11,7 @@ pub struct Player {
     pub current_level: usize,
     pub keys: Vec<String>,
     pub health: i32,
+    pub is_dead: bool,
 }
 
 #[allow(unused_assignments)]
@@ -23,11 +24,15 @@ impl Player {
             current_level: 1,
             keys: Vec::new(),
             health: 100,
+            is_dead: false,
         }
     }
 
     pub fn take_hit(&mut self) {
         self.health = self.health - 25;
+        if self.health <= 0 {
+            self.is_dead = true;
+        }
     }
 
     pub fn move_up(&mut self, level: &Vec<WallTile>, doors: &Vec<DoorTile>) {

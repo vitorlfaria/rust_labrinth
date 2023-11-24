@@ -8,7 +8,7 @@ use labrinth::{
     utils::frame::{self, new_frame, Drawable, Frame},
     levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
     entities::{player::Player, enemy::Enemy},
-    utils::render::render, items::key::Key,
+    utils::render::render, items::key::Key, screens::lose_screen::generate_lose_screen,
 };
 use std::{
     error::Error,
@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     stdout.execute(Hide)?;
 
     // Render loop in separete thread
-    let (render_tx, render_rx) = mpsc::channel::<Frame>();
+    let (render_tx, render_rx) = mpsc::channel::<(Frame, bool)>();
     let render_handle = thread::spawn(move || {
         let mut last_frame = frame::new_frame();
         let mut stdout = io::stdout();
@@ -34,11 +34,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         render(&mut stdout, &last_frame, &last_frame, true);
 
         loop {
-            let curr_frame = match render_rx.recv() {
-                Ok(x) => x,
+            let (curr_frame, force) = match render_rx.recv() {
+                Ok((x, y)) => (x, y),
                 Err(_) => break,
             };
-            render(&mut stdout, &last_frame, &curr_frame, false);
+            render(&mut stdout, &last_frame, &curr_frame, force);
             last_frame = curr_frame;
         }
     });
@@ -128,7 +128,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         for drawable in drawables {
             drawable.draw(&mut curr_frame, &view_range);
         }
-        let _ = render_tx.send(curr_frame);
+        let _ = render_tx.send((curr_frame, false));
+        
+        // Win or Lose
+        if player.is_dead {
+            let lose_screen = generate_lose_screen();
+            let _ = render_tx.send((lose_screen, true));
+            thread::sleep(Duration::from_millis(4000));
+            break 'gameloop;
+        }
+
         thread::sleep(Duration::from_millis(1));
     }
 
