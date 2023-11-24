@@ -29,7 +29,7 @@ impl Player {
     }
 
     pub fn take_hit(&mut self) {
-        self.health = self.health - 25;
+        self.health = self.health - 50;
         if self.health <= 0 {
             self.is_dead = true;
         }
@@ -247,7 +247,7 @@ impl Player {
 impl Drawable for Player {
     fn draw(&self, frame: &mut Frame, _render_area: &Vec<Vec<(usize, usize)>>) {
         frame[self.x][self.y] = "A".to_string();
-        frame[0][0] = format!("Health: {}", self.health);
+        frame[0][0] = format!("Health: {}", self.health.to_string());
 
         // Draw hitbox
         // for (x, y, positive) in &self.hitbox {
