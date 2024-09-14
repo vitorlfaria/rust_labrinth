@@ -5,10 +5,15 @@ use crossterm::{
     ExecutableCommand,
 };
 use labrinth::{
+    entities::{enemy::Enemy, player::Player},
+    items::key::Key,
+    levels::{
+        door_tile::DoorTile, level_1::Level1, level_2::Level2, level_3::Level3,
+        level_factory::LevelFactory, wall_tile::WallTile,
+    },
+    screens::lose_screen::generate_lose_screen,
     utils::frame::{self, new_frame, Drawable, Frame},
-    levels::{level_1::Level1, level_factory::LevelFactory, wall_tile::WallTile, level_2::Level2, door_tile::DoorTile, level_3::Level3},
-    entities::{player::Player, enemy::Enemy},
-    utils::render::render, items::key::Key, screens::lose_screen::generate_lose_screen,
+    utils::render::render,
 };
 use std::{
     error::Error,
@@ -18,7 +23,8 @@ use std::{
     time::{Duration, Instant},
 };
 
-fn main() -> Result<(), Box<dyn Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     // Terminal initialization
     let mut stdout = std::io::stdout();
     terminal::enable_raw_mode()?;
@@ -79,7 +85,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     levels_keys.push(&level2.keys);
     levels_keys.push(&level3.keys);
 
-    let mut enemy = Enemy::new(0,0, vec![]);
+    let mut enemy = Enemy::new(0, 0, vec![]);
     if player.current_level == 1 {
         enemy = Enemy::new(level1.enemy.0, level1.enemy.1, level1.patrol_points.clone());
     }
@@ -105,6 +111,10 @@ fn main() -> Result<(), Box<dyn Error>> {
                         KeyCode::Char('a') => player.move_left(curr_level_tiles, curr_level_doors),
                         KeyCode::Char('d') => player.move_right(curr_level_tiles, curr_level_doors),
                         KeyCode::Esc => {
+                            player
+                                .client
+                                .close(None)
+                                .expect("Error while closing server connection");
                             break 'gameloop;
                         }
                         _ => {}
@@ -129,7 +139,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             drawable.draw(&mut curr_frame, &view_range);
         }
         let _ = render_tx.send((curr_frame, false));
-        
+
         // Win or Lose
         if player.is_dead {
             let lose_screen = generate_lose_screen();

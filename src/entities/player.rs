@@ -1,6 +1,13 @@
+use std::net::TcpStream;
+
+use tokio_tungstenite::tungstenite::{stream::MaybeTlsStream, Message, WebSocket};
+
 use crate::{
     levels::{door_tile::DoorTile, wall_tile::WallTile},
-    utils::frame::{Drawable, Frame},
+    utils::{
+        frame::{Drawable, Frame},
+        ws_client::init_server_connection,
+    },
     NUM_COLS, NUM_ROWS,
 };
 
@@ -12,6 +19,7 @@ pub struct Player {
     pub keys: Vec<String>,
     pub health: i32,
     pub is_dead: bool,
+    pub client: WebSocket<MaybeTlsStream<TcpStream>>,
 }
 
 #[allow(unused_assignments)]
@@ -25,6 +33,7 @@ impl Player {
             keys: Vec::new(),
             health: 100,
             is_dead: false,
+            client: init_server_connection(),
         }
     }
 
@@ -40,6 +49,7 @@ impl Player {
         let can_move = self.detect_walls(level);
         if self.y > 1 && can_move.1 {
             self.y -= 1;
+            self.send_location();
         }
     }
 
@@ -48,6 +58,7 @@ impl Player {
         let can_move = self.detect_walls(level);
         if self.y < NUM_ROWS - 2 && can_move.3 {
             self.y += 1;
+            self.send_location();
         }
     }
 
@@ -56,6 +67,7 @@ impl Player {
         let can_move = self.detect_walls(level);
         if self.x > 1 && can_move.0 {
             self.x -= 1;
+            self.send_location();
         }
     }
 
@@ -64,7 +76,14 @@ impl Player {
         let can_move = self.detect_walls(level);
         if self.x < NUM_COLS - 2 && can_move.2 {
             self.x += 1;
+            self.send_location();
         }
+    }
+
+    fn send_location(&mut self) {
+        self.client
+            .send(format!("{},{},{}", self.current_level, self.x, self.y).into())
+            .expect("Error on player::send_location");
     }
 
     pub fn take_key(&mut self, key: String) {
