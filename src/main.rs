@@ -111,10 +111,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
                         KeyCode::Char('a') => player.move_left(curr_level_tiles, curr_level_doors),
                         KeyCode::Char('d') => player.move_right(curr_level_tiles, curr_level_doors),
                         KeyCode::Esc => {
-                            player
-                                .client
-                                .close(None)
-                                .expect("Error while closing server connection");
+                            //                            player
+                            //                                .client
+                            //                                .close(None)
+                            //                                .expect("Error while closing server connection");
                             break 'gameloop;
                         }
                         _ => {}
